@@ -1,4 +1,4 @@
-package com.example.booker;
+package com.ufcg.booker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
