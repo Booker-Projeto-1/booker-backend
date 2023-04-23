@@ -3,34 +3,33 @@ Repositório responsável pelo código do backend da aplicação Booker
 
 ## Getting Started
 
-### Dependencies
+### Dependencias
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
 * Java 17
-* IntelliJ/Eclipse/IDE da sua escolha
-* PostgreSQL (futuramente)
+* IntelliJ/Eclipse/IDE of your choice
+* PostgreSQL (later on)
 
 ### Installing
 
-* Instale o Java 17 na sua máquina:
+* Install Java 17 on your machine (if you don't have it):
 
 ```
 apt install openjdk-17-jdk openjdk-17-jre
 ```
-* Clone o repositorio
+* Clone the repository
 ```
 git clone git@github.com:Booker-Projeto-1/booker-backend.git
 ```
 
-* Importe o projeto na sua IDE de preferência
+* Import the project on your favorite IDE
 
 ### Executing program
 
-* Abra o Terminal na pasta do projeto (nesse caso o projeto é o booker e não o booker-backend - nome do repositório)
-* Execute o comando a seguir:
+* Open Terminal in the project folder (in this case the project is booker and not booker-backend - repository name)
+* Run the following command:
 ```
 ./gradlew bootrun
 ```
 
-* Abra o navegador em http://localhost:8080/ (Hello World) ou em http://localhost:8080/h2-console para ver o Banco de Dados
-* As informações de acesso ao Banco de Dados estão no arquivo application.properties
+* Open your browser to http://localhost:8080/ (Hello World) or http://localhost:8080/h2-console to see the Database
+* Database access information is in the application.properties file
