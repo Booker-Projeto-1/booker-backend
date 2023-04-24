@@ -1,5 +1,8 @@
-package com.ufcg.booker;
+package com.ufcg.booker.controller;
 
+import com.ufcg.booker.dto.CreateUserDto;
+import com.ufcg.booker.repository.UserRepository;
+import com.ufcg.booker.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,7 @@ public class CreateUserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Map<String, Object>> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<Map<String, Object>> createUser(@RequestBody CreateUserDto request) {
         if (userRepository.existsByEmail(request.email())) {
             return ResponseEntity.badRequest().body(Map.of("erro", "Usuário já existente"));
         }

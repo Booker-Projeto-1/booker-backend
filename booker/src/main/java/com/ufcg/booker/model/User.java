@@ -1,4 +1,4 @@
-package com.ufcg.booker;
+package com.ufcg.booker.model;
 
 import jakarta.persistence.*;
 
