@@ -27,4 +27,12 @@ public class User {
     public Long getId() {
         return this.id;
     }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }

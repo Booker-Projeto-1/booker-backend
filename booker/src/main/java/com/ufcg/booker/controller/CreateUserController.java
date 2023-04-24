@@ -23,7 +23,7 @@ public class CreateUserController {
         if (userRepository.existsByEmail(request.email())) {
             return ResponseEntity.badRequest().body(Map.of("erro", "Usuário já existente"));
         }
-        User user = new User(request.email(), request.fullName(), request.phoneNumber(), request.password());
+        User user = request.toUser();
         User savedUser = userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", savedUser.getId()));
