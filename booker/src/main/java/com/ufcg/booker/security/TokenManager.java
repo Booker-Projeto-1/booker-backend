@@ -2,6 +2,7 @@ package com.ufcg.booker.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.lang.Assert;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,10 @@ import java.util.Date;
 @Component
 public class TokenManager {
 
-//    @Value("${jwt.secret}")
-    private String secret = "jdk02kdadnjndiawd9kk0das2813uj1kd0213hdj09123hd0123123csax";
-//    @Value("${jwt.expTime}")
-    private int timeToExpireInSeconds = 180;
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.expiration.time.seconds}")
+    private int timeToExpireInSeconds;
 
     public String generateToken(Authentication authentication) {
         UserDetails user = (UserDetails) authentication.getPrincipal();
