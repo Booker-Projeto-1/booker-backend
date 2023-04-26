@@ -3,7 +3,7 @@ package com.ufcg.booker.dto;
 import com.ufcg.booker.model.User;
 import jakarta.validation.constraints.*;
 
-public record CreateUserDto(
+public record SigninDto(
         @Email @NotBlank String email,
         @NotBlank @Size(min = 8) String password,
         @NotBlank String phoneNumber,
