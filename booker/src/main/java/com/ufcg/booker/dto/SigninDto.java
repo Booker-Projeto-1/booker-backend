@@ -2,6 +2,7 @@ package com.ufcg.booker.dto;
 
 import com.ufcg.booker.model.User;
 import jakarta.validation.constraints.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public record SigninDto(
         @Email @NotBlank String email,
@@ -16,6 +17,6 @@ public record SigninDto(
     }
 
     public User toUser() {
-        return new User(this.email, this.fullName(), this.phoneNumber, this.password);
+        return new User(this.email, this.fullName(), this.phoneNumber, new BCryptPasswordEncoder().encode(this.password)); //TODO Refactor it
     }
 }
