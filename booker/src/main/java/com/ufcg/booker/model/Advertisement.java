@@ -1,9 +1,6 @@
 package com.ufcg.booker.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -14,7 +11,6 @@ public class Advertisement {
     @Id
     @GeneratedValue
     private Long id;
-
     private Long idUser;
     private String idBook;
     private boolean active;
