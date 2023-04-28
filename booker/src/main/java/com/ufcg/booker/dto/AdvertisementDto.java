@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record AdvertisementDto(
         @NotNull Long idUser,
-        @NotBlank String idBook,
+        @NotNull Long idBook,
         boolean active,
         boolean borrowed
 ) {

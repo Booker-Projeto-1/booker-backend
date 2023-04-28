@@ -12,14 +12,14 @@ public class Advertisement {
     @GeneratedValue
     private Long id;
     private Long idUser;
-    private String idBook;
+    private Long idBook;
     private boolean active;
     private boolean borrowed;
 
     @Deprecated
     protected Advertisement(){}
 
-    public Advertisement(Long idUser, String idBook){
+    public Advertisement(Long idUser, Long idBook){
         this.idUser = idUser;
         this.idBook = idBook;
         this.active = true;
@@ -34,7 +34,7 @@ public class Advertisement {
         return idUser;
     }
 
-    public String getIdBook() {
+    public Long getIdBook() {
         return idBook;
     }
 

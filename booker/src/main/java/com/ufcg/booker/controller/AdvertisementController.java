@@ -36,6 +36,6 @@ public class AdvertisementController {
         System.out.println(request.idUser());
         return ResponseEntity.status(CREATED).body(new AdvertisementController.AdResponse(savedAd.getId(), savedAd.getIdUser(), savedAd.getIdBook()));
     }
-    record AdResponse(Long id, Long idUser, String idBook) {}
+    record AdResponse(Long id, Long idUser, Long idBook) {}
     record AdvertisementError(String error) {}
 }
