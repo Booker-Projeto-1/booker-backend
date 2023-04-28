@@ -25,12 +25,6 @@ public class AdvertisementController {
         this.userRepository = userRepository;
     }
 
-
-    @GetMapping("/h")
-    public String hello(@AuthenticationPrincipal LoggedUser loggedUser) {
-        return String.format("Hello %s!", loggedUser.get().getEmail());
-    }
-
     @PostMapping("/advertisement")
     public ResponseEntity<?> createAd(@RequestBody AdvertisementDto request, @AuthenticationPrincipal LoggedUser loggedUser) {
         if (userRepository.findById(request.idUser()).isEmpty()) {
