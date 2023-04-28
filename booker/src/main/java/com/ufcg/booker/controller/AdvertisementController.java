@@ -31,12 +31,15 @@ public class AdvertisementController {
         if (userRepository.findById(request.idUser()).isEmpty()) {
             return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Não existe usuário cadastrado com id " + request.idUser()));
         }
+        if(!adRepository.findAllByUserIdAndBookId(request.idUser(), request.idBook()).isEmpty()) {
+            return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Já existe anúncio do livro " + request.idBook() +  " cadastrado para o usuário com id " + request.idUser()));
+        }
 
         Advertisement ad = request.toAdvertisement();
         Advertisement savedAd = adRepository.save(ad);
         System.out.println(request.idUser());
-        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdResponse(savedAd.getId(), savedAd.getIdUser(), savedAd.getIdBook()));
+        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdResponse(savedAd.getId(), savedAd.getIdUser(), savedAd.getIdBook(), savedAd.getAdDescription(), savedAd.isActive(), savedAd.isBorrowed(), savedAd.getNumberOfBooks()));
     }
-    record AdResponse(Long id, Long idUser, Long idBook) {}
+    record AdResponse(Long id, Long idUser, Long idBook, String adDescription, boolean isActive, boolean isBorrowed, Integer numberOfBooks) {}
     record AdvertisementError(String error) {}
 }
