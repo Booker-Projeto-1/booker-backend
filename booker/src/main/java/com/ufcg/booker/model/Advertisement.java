@@ -14,9 +14,7 @@ public class Advertisement {
     private Long idUser;
     private Long idBook;
     private String adDescription;
-
     private Integer numberOfBooks;
-
     private boolean active;
     private boolean borrowed;
 
