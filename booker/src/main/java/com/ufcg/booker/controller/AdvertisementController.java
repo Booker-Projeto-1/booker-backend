@@ -37,7 +37,7 @@ public class AdvertisementController {
 
         Advertisement ad = request.toAdvertisement();
         Advertisement savedAd = adRepository.save(ad);
-        System.out.println(request.idUser());
+
         return ResponseEntity.status(CREATED).body(new AdvertisementController.AdResponse(savedAd.getId(), savedAd.getIdUser(), savedAd.getIdBook(), savedAd.getAdDescription(), savedAd.isActive(), savedAd.isBorrowed(), savedAd.getNumberOfBooks()));
     }
     record AdResponse(Long id, Long idUser, Long idBook, String adDescription, boolean isActive, boolean isBorrowed, Integer numberOfBooks) {}
