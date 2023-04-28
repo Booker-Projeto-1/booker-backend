@@ -8,8 +8,4 @@ import java.util.List;
 
 public interface AdRepository extends JpaRepository<Advertisement, Long> {
 
-
-    boolean existsByIdBookAndIdUser(Long idUser, String idBook);
-
-    //List<AdvertisementDto> findByBookId(String bookId);
 }
