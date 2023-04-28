@@ -8,13 +8,11 @@ public record AdvertisementDto(
         @NotNull Long idUser,
         @NotNull Long idBook,
         String adDescription,
-        @NotNull
-        Integer numberOfBooks,
         boolean active,
         boolean borrowed
 ) {
 
     public Advertisement toAdvertisement(){
-        return new Advertisement(this.idUser, this.idBook, this.adDescription, this.numberOfBooks);
+        return new Advertisement(this.idUser, this.idBook, this.adDescription);
     }
 }
