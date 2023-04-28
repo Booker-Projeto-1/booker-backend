@@ -20,6 +20,7 @@ public class AdvertisementController {
 
     private final AdRepository adRepository;
     private final UserRepository userRepository;
+    
     public AdvertisementController(AdRepository adRepository, UserRepository userRepository) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
