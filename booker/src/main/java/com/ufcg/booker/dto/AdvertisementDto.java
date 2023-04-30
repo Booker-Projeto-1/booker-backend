@@ -1,18 +1,17 @@
 package com.ufcg.booker.dto;
 
 import com.ufcg.booker.model.Advertisement;
+import com.ufcg.booker.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record AdvertisementDto(
-        @NotNull Long idUser,
-        @NotNull Long idBook,
-        String adDescription,
-        boolean active,
-        boolean borrowed
+        @NotNull Long bookId,
+        String description
+
 ) {
 
-    public Advertisement toAdvertisement(){
-        return new Advertisement(this.idUser, this.idBook, this.adDescription);
+    public Advertisement toAdvertisement(User user){
+        return new Advertisement(user, this.bookId, this.description);
     }
 }

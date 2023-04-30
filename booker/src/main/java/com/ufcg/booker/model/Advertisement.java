@@ -11,19 +11,20 @@ public class Advertisement {
     @Id
     @GeneratedValue
     private Long id;
-    private Long idUser;
-    private Long idBook;
-    private String adDescription;
+    @ManyToOne
+    private User user;
+    private Long bookId;
+    private String description;
     private boolean active;
     private boolean borrowed;
 
     @Deprecated
     protected Advertisement(){}
 
-    public Advertisement(Long idUser, Long idBook, String adDescription){
-        this.idUser = idUser;
-        this.idBook = idBook;
-        this.adDescription = adDescription;
+    public Advertisement(User user, Long bookId, String adDescription){
+        this.user = user;
+        this.bookId = bookId;
+        this.description = adDescription;
         this.active = true;
         this.borrowed = false;
     }
@@ -32,16 +33,16 @@ public class Advertisement {
         return id;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public User getUser() {
+        return user;
     }
 
-    public Long getIdBook() {
-        return idBook;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public String getAdDescription() {
-        return adDescription;
+    public String getDescription() {
+        return description;
     }
     public boolean isActive() {
         return active;
@@ -51,8 +52,8 @@ public class Advertisement {
         return borrowed;
     }
 
-    public void setAdDescription(String adDescription) {
-        this.adDescription = adDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
     public void setActive(boolean active) {
         this.active = active;
@@ -67,20 +68,20 @@ public class Advertisement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Advertisement that = (Advertisement) o;
-        return active == that.active && borrowed == that.borrowed && id.equals(that.id) && idUser.equals(that.idUser) && idBook.equals(that.idBook);
+        return active == that.active && borrowed == that.borrowed && id.equals(that.id) && user.equals(that.user) && bookId.equals(that.bookId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idUser, idBook, active, borrowed);
+        return Objects.hash(id, user, bookId, active, borrowed);
     }
 
     @Override
     public String toString() {
         return "Advertisement{" +
                 "id=" + id +
-                ", idUser=" + idUser +
-                ", idBook='" + idBook + '\'' +
+                ", user=" + user +
+                ", idBook='" + bookId + '\'' +
                 ", active=" + active +
                 ", borrowed=" + borrowed +
                 '}';
