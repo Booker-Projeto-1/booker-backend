@@ -35,8 +35,8 @@ public class AdvertisementController {
         Advertisement ad = request.toAdvertisement(user);
         Advertisement savedAd = advertisementRepository.save(ad);
 
-        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdResponse(savedAd.getId(), user, savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
+        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user, savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
     }
-    record AdResponse(Long id, User user, Long bookId, String description, boolean isActive, boolean isBorrowed) {}
+    record AdvertisementResponse(Long id, User user, Long bookId, String description, boolean isActive, boolean isBorrowed) {}
     record AdvertisementError(String error) {}
 }
