@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                     .requestMatchers(toH2Console()).permitAll()
                     .anyRequest().authenticated();
             })
-            .cors(AbstractHttpConfigurer::disable)
+            .cors().and()
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
