@@ -8,11 +8,16 @@ import com.ufcg.booker.repository.UserRepository;
 import com.ufcg.booker.security.LoggedUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 public class AdvertisementController {
@@ -35,8 +40,36 @@ public class AdvertisementController {
         Advertisement ad = request.toAdvertisement(user);
         Advertisement savedAd = advertisementRepository.save(ad);
 
-        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user, savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
+        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user.getEmail(), savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
     }
-    record AdvertisementResponse(Long id, User user, Long bookId, String description, boolean active, boolean borrowed) {}
+
+    @GetMapping("/advertisement/list")
+    public ResponseEntity<?> listAds(@AuthenticationPrincipal LoggedUser loggedUser) {
+        User user = loggedUser.get();
+
+        List<Advertisement> ads = advertisementRepository.findAll();
+        List<AdvertisementResponse> adsResponse = this.createAdvertisementeList(ads);
+
+        return ResponseEntity.status(OK).body(adsResponse);
+    }
+    record AdvertisementResponse(Long id, String userEmail, Long bookId, String description, boolean active, boolean borrowed) {}
+
     record AdvertisementError(String error) {}
+
+    private List<AdvertisementResponse> createAdvertisementeList(List<Advertisement> ads){
+        List<AdvertisementResponse> adsResponse = new ArrayList<>();
+        for (Advertisement ad: ads) {
+            adsResponse.add(new AdvertisementController.AdvertisementResponse(
+                    ad.getId(),
+                    ad.getUser().getEmail(),
+                    ad.getBookId(),
+                    ad.getDescription(),
+                    ad.isActive(),
+                    ad.isBorrowed()
+            ));
+
+        }
+        return adsResponse;
+
+    }
 }
