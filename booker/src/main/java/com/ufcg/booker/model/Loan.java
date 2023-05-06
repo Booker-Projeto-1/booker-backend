@@ -14,15 +14,15 @@ public class Loan {
     private Long loanId;
 
     @ManyToOne
-//    @JoinColumn(name = "lender_id")
+    @JoinColumn(name = "lender_id")
     private User lender;
 
     @ManyToOne
-//    @JoinColumn(name = "borrower_id")
+    @JoinColumn(name = "borrower_id")
     private User borrower;
 
     @ManyToOne
-//    @JoinColumn(name = "ad_id")
+    @JoinColumn(name = "ad_id")
     private Advertisement ad;
 
     private Date beginDate;
