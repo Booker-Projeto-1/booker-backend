@@ -12,5 +12,4 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, Lo
 
     @Query("SELECT a FROM Advertisement a WHERE a.user = :user AND a.bookId = :bookId")
     List<Advertisement> findAllByUserAndBookId(@Param("user") User user, @Param("bookId") Long bookId);
-
 }
