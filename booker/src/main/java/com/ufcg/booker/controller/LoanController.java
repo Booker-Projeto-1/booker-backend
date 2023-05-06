@@ -39,6 +39,9 @@ public class LoanController {
     public ResponseEntity<?> createLoan(@RequestBody LoanDto request, @AuthenticationPrincipal LoggedUser loggedUser) throws ParseException {
         User user = loggedUser.get();
 
+        if(request.borrower().equals(user.getEmail())){
+            return ResponseEntity.badRequest().body(new LoanController.LoanError("Não é possível emprestar um livro a si mesmo!"));
+        }
         if(!advertisementRepository.existsById(request.advertisement())){
             return ResponseEntity.badRequest().body(new LoanController.LoanError("Anuncio inexistente"));
         }
@@ -53,6 +56,7 @@ public class LoanController {
             return ResponseEntity.badRequest().body(new LoanController.LoanError("Usuário inexistente"));
         }
         User borrower = borrowerOptional.get();
+
         Loan loan = request.toLoan(user, borrower, ad);
         Loan savedLoan = loanRepository.save(loan);
 

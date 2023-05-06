@@ -3,6 +3,7 @@ package com.ufcg.booker.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Loan {
@@ -87,5 +88,18 @@ public class Loan {
 
     public void setId(Long id) {
         this.loanId = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Loan loan = (Loan) o;
+        return loanId.equals(loan.loanId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(loanId);
     }
 }
