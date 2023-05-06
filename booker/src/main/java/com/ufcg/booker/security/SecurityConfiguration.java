@@ -22,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -51,7 +53,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
-                auth.requestMatchers("/signin", "/login").permitAll().anyRequest().authenticated();
+                auth.requestMatchers("/signin", "/login").permitAll()
+                    .requestMatchers(toH2Console()).permitAll()
+                    .anyRequest().authenticated();
             })
             .cors(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
