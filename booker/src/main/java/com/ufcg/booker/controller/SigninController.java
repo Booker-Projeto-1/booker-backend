@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
+@CrossOrigin
 public class SigninController {
 
     private final UserRepository userRepository;
