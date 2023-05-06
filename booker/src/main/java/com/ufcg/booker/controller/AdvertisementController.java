@@ -17,7 +17,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@CrossOrigin
 public class AdvertisementController {
 
     private final AdvertisementRepository advertisementRepository;
