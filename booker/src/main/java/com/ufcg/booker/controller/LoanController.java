@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class LoanController {
     }
 
     @PostMapping("/loan")
-    public ResponseEntity<?> createLoan(@RequestBody LoanDto request, @AuthenticationPrincipal LoggedUser loggedUser) {
+    public ResponseEntity<?> createLoan(@RequestBody LoanDto request, @AuthenticationPrincipal LoggedUser loggedUser) throws ParseException {
         User user = loggedUser.get();
 
         if(!advertisementRepository.existsById(request.advertisement())){
