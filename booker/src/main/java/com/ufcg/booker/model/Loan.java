@@ -2,6 +2,7 @@ package com.ufcg.booker.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,15 +26,15 @@ public class Loan {
     @JoinColumn(name = "ad_id")
     private Advertisement ad;
 
-    private Date beginDate;
+    private LocalDate beginDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
     @Deprecated
     public Loan() {
     }
 
-    public Loan(User lender, User borrower, Advertisement ad, Date beginDate, Date endDate) {
+    public Loan(User lender, User borrower, Advertisement ad, LocalDate beginDate, LocalDate endDate) {
         this.lender = lender;
         this.borrower = borrower;
         this.ad = ad;
@@ -41,20 +42,12 @@ public class Loan {
         this.endDate = endDate;
     }
 
-    public Date getBeginDate() {
+    public LocalDate getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Date beginDate) {
-        this.beginDate = beginDate;
-    }
-
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public Advertisement getAd() {

@@ -3,21 +3,22 @@ package com.ufcg.booker.dto;
 import com.ufcg.booker.model.Advertisement;
 import com.ufcg.booker.model.Loan;
 import com.ufcg.booker.model.User;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public record LoanDto(
 
-        @NotBlank String borrower,
+        @NotNull Long borrowerId,
 
-        @NotBlank Long advertisement,
+        @NotNull Long advertisementId,
 
-        @NotBlank @DateTimeFormat(pattern = "dd/mm/yyyy") Date beginDate,
-        @NotBlank @DateTimeFormat(pattern = "dd/mm/yyyy") Date endDate
+        @NotNull @DateTimeFormat(pattern = "dd/mm/yyyy") LocalDate beginDate,
+        @NotNull @DateTimeFormat(pattern = "dd/mm/yyyy") @Future LocalDate endDate
 ) {
 
 
