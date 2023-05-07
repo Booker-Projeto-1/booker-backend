@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class LoanController {
     }
 
     @PostMapping("/loan")
-    public ResponseEntity<?> createLoan(@RequestBody LoanDto request, @AuthenticationPrincipal LoggedUser loggedUser) throws ParseException {
+    public ResponseEntity<?> createLoan(@RequestBody LoanDto request, @AuthenticationPrincipal LoggedUser loggedUser){
         User user = loggedUser.get();
 
         if(request.borrowerId().equals(user.getId())){
@@ -56,8 +57,10 @@ public class LoanController {
             return ResponseEntity.badRequest().body(new LoanError("Usuário inexistente"));
         }
         User borrower = possibleBorrower.get();
-
-        Loan loan = new Loan(user,borrower,ad, request.beginDate(), request.endDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate beginDate = LocalDate.parse(request.beginDate(), formatter);
+        LocalDate endDate = LocalDate.parse(request.endDate(), formatter);
+        Loan loan = new Loan(user,borrower,ad, beginDate, endDate);
         Loan savedLoan = loanRepository.save(loan);
 
         return ResponseEntity.status(CREATED).body(new LoanResponse(savedLoan.getId(), user.getEmail(), borrower.getEmail(), ad.getBookId(), savedLoan.getBeginDate(), savedLoan.getEndDate()));

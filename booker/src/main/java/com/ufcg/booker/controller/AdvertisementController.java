@@ -25,7 +25,7 @@ public class AdvertisementController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/advertisementId")
+    @PostMapping("/advertisement")
     public ResponseEntity<?> createAd(@RequestBody AdvertisementDto request, @AuthenticationPrincipal LoggedUser loggedUser) {
         User user = loggedUser.get();
         if(!advertisementRepository.findAllByUserAndBookId(user, request.bookId()).isEmpty()) {
