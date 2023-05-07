@@ -1,5 +1,6 @@
 package com.ufcg.booker.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ufcg.booker.model.Advertisement;
 import com.ufcg.booker.model.Loan;
 import com.ufcg.booker.model.User;
@@ -12,9 +13,10 @@ public record LoanDto(
         @NotNull Long borrowerId,
 
         @NotNull Long advertisementId,
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        @NotNull LocalDate beginDate,
 
-        @NotNull String beginDate,
-
-        @NotNull String endDate
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        @NotNull LocalDate endDate
 ) {
 }

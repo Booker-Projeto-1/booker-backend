@@ -20,9 +20,4 @@ public class BookerApplication {
 	public String hello(@AuthenticationPrincipal LoggedUser loggedUser) {
 		return String.format("Hello %s!", loggedUser.get().getEmail());
 	}
-
-	@GetMapping("/hello")
-	public String helloWorld(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
-	}
 }

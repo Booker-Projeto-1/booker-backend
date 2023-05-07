@@ -57,10 +57,7 @@ public class LoanController {
             return ResponseEntity.badRequest().body(new LoanError("Usuário inexistente"));
         }
         User borrower = possibleBorrower.get();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate beginDate = LocalDate.parse(request.beginDate(), formatter);
-        LocalDate endDate = LocalDate.parse(request.endDate(), formatter);
-        Loan loan = new Loan(user,borrower,ad, beginDate, endDate);
+        Loan loan = new Loan(user,borrower,ad, request.beginDate(), request.endDate());
         Loan savedLoan = loanRepository.save(loan);
 
         return ResponseEntity.status(CREATED).body(new LoanResponse(savedLoan.getId(), user.getEmail(), borrower.getEmail(), ad.getBookId(), savedLoan.getBeginDate(), savedLoan.getEndDate()));
