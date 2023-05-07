@@ -41,32 +41,18 @@ public class AdvertisementController {
     }
 
     @GetMapping("/advertisement/list")
-    public ResponseEntity<?> listAds(@AuthenticationPrincipal LoggedUser loggedUser) {
-        User user = loggedUser.get();
+    public ResponseEntity<?> listAds() {
 
         List<Advertisement> ads = advertisementRepository.findAll();
-        List<AdvertisementResponse> adsResponse = this.createAdvertisementeList(ads);
+        List<AdvertisementResponse> adsResponse = ads.stream().map(AdvertisementResponse::new).toList();
 
         return ResponseEntity.status(OK).body(adsResponse);
     }
-    record AdvertisementResponse(Long id, String userEmail, Long bookId, String description, boolean active, boolean borrowed) {}
+    record AdvertisementResponse(Long id, String userEmail, Long bookId, String description, boolean active, boolean borrowed) {
+        public AdvertisementResponse(Advertisement ad){
+            this(ad.getId(), ad.getUser().getEmail(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
+        }
+    }
 
     record AdvertisementError(String error) {}
-
-    private List<AdvertisementResponse> createAdvertisementeList(List<Advertisement> ads){
-        List<AdvertisementResponse> adsResponse = new ArrayList<>();
-        for (Advertisement ad: ads) {
-            adsResponse.add(new AdvertisementController.AdvertisementResponse(
-                    ad.getId(),
-                    ad.getUser().getEmail(),
-                    ad.getBookId(),
-                    ad.getDescription(),
-                    ad.isActive(),
-                    ad.isBorrowed()
-            ));
-
-        }
-        return adsResponse;
-
-    }
 }
