@@ -51,6 +51,8 @@ public class LoanController {
         if(ad.isBorrowed()){
             return ResponseEntity.badRequest().body(new LoanError("Livro já emprestado!"));
         }
+        ad.setBorrowed(true);
+        advertisementRepository.save(ad);
 
         Optional<User> possibleBorrower = userRepository.findById(request.borrowerId());
         if(possibleBorrower.isEmpty()){
