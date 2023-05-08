@@ -8,6 +8,7 @@ import com.ufcg.booker.repository.UserRepository;
 import com.ufcg.booker.security.LoggedUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class AdvertisementController {
 
     private final AdvertisementRepository advertisementRepository;
@@ -35,8 +37,9 @@ public class AdvertisementController {
         Advertisement ad = request.toAdvertisement(user);
         Advertisement savedAd = advertisementRepository.save(ad);
 
-        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user, savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
+        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user.getEmail(), savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
     }
-    record AdvertisementResponse(Long id, User user, Long bookId, String description, boolean active, boolean borrowed) {}
+    record AdvertisementResponse(Long id, String userEmail, String bookId, String description, boolean active, boolean borrowed) {}
+
     record AdvertisementError(String error) {}
 }

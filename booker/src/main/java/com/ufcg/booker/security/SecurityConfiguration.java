@@ -54,16 +54,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
-                    auth.requestMatchers("/signin", "/login").permitAll()
-                            .requestMatchers(toH2Console()).permitAll()
-                            .anyRequest().authenticated();
-                })
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
-                .headers().frameOptions().disable();
+                auth.requestMatchers("/signin", "/login").permitAll()
+                    .requestMatchers(toH2Console()).permitAll()
+                    .anyRequest().authenticated();
+            })
+            .cors().and()
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
+            .headers().frameOptions().disable();
 
         return http.build();
     }

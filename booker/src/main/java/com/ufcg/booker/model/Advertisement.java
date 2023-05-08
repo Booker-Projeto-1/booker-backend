@@ -15,7 +15,7 @@ public class Advertisement {
     private Long id;
     @ManyToOne
     private User user;
-    private Long bookId;
+    private String bookId;
     private String description;
     private boolean active;
     private boolean borrowed;
@@ -26,7 +26,7 @@ public class Advertisement {
     @Deprecated
     protected Advertisement(){}
 
-    public Advertisement(User user, Long bookId, String adDescription){
+    public Advertisement(User user, String bookId, String adDescription){
         this.user = user;
         this.bookId = bookId;
         this.description = adDescription;
@@ -43,7 +43,7 @@ public class Advertisement {
         return user;
     }
 
-    public Long getBookId() {
+    public String getBookId() {
         return bookId;
     }
 
