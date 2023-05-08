@@ -2,6 +2,8 @@ package com.ufcg.booker.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,20 +15,24 @@ public class Advertisement {
     private Long id;
     @ManyToOne
     private User user;
-    private Long bookId;
+    private String bookId;
     private String description;
     private boolean active;
     private boolean borrowed;
 
+    @OneToMany(mappedBy = "ad")
+    private List<Loan> loans;
+
     @Deprecated
     protected Advertisement(){}
 
-    public Advertisement(User user, Long bookId, String adDescription){
+    public Advertisement(User user, String bookId, String adDescription){
         this.user = user;
         this.bookId = bookId;
         this.description = adDescription;
         this.active = true;
         this.borrowed = false;
+        this.loans = new ArrayList<>();
     }
 
     public Long getId() {
@@ -37,7 +43,7 @@ public class Advertisement {
         return user;
     }
 
-    public Long getBookId() {
+    public String getBookId() {
         return bookId;
     }
 
