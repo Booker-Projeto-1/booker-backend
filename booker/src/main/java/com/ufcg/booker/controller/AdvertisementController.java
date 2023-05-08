@@ -44,7 +44,7 @@ public class AdvertisementController {
     public ResponseEntity<?> listAds() {
 
         List<Advertisement> ads = advertisementRepository.findAll();
-        List<AdvertisementResponse> adsResponse = ads.stream().map(AdvertisementResponse::new).toList();
+        List<AdvertisementResponse> adsResponse = ads.stream().filter(ad -> !ad.isBorrowed() && ad.isActive()).map(AdvertisementResponse::new).toList();
 
         return ResponseEntity.status(OK).body(adsResponse);
     }
