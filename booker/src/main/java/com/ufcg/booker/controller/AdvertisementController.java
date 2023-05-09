@@ -8,12 +8,14 @@ import com.ufcg.booker.repository.UserRepository;
 import com.ufcg.booker.security.LoggedUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -39,7 +41,22 @@ public class AdvertisementController {
 
         return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user.getEmail(), savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
     }
-    record AdvertisementResponse(Long id, String userEmail, String bookId, String description, boolean active, boolean borrowed) {}
+
+    @GetMapping("/advertisement/list")
+    public ResponseEntity<?> listAds() {
+
+        List<Advertisement> ads = advertisementRepository.findAll();
+
+        List<AdvertisementResponse> adsResponse = ads.stream().filter(ad -> !ad.isBorrowed() && ad.isActive()).map(AdvertisementResponse::new).toList();
+
+        return ResponseEntity.status(OK).body(adsResponse);
+    }
+    record AdvertisementResponse(Long id, String userEmail, Long bookId, String description, boolean active, boolean borrowed) {
+        public AdvertisementResponse(Advertisement ad){
+            this(ad.getId(), ad.getUser().getEmail(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
+        }
+    }
+
 
     record AdvertisementError(String error) {}
 }
