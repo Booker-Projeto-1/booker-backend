@@ -65,6 +65,6 @@ public class LoanController {
         return ResponseEntity.status(CREATED).body(new LoanResponse(savedLoan.getId(), user.getEmail(), borrower.getEmail(), ad.getBookId(), savedLoan.getBeginDate(), savedLoan.getEndDate()));
     }
 
-    record LoanResponse(Long id, String lender, String borrower, Long bookId, LocalDate begin, LocalDate end) {}
+    record LoanResponse(Long id, String lender, String borrower, String bookId, LocalDate begin, LocalDate end) {}
     record LoanError(String error) {}
 }

@@ -11,6 +11,6 @@ import java.util.List;
 public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
 
     @Query("SELECT a FROM Advertisement a WHERE a.user = :user AND a.bookId = :bookId")
-    List<Advertisement> findAllByUserAndBookId(@Param("user") User user, @Param("bookId") Long bookId);
+    List<Advertisement> findAllByUserAndBookId(@Param("user") User user, @Param("bookId") String bookId);
 
 }

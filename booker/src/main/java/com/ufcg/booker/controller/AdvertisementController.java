@@ -18,7 +18,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 public class AdvertisementController {
 
     private final AdvertisementRepository advertisementRepository;
@@ -51,7 +50,7 @@ public class AdvertisementController {
 
         return ResponseEntity.status(OK).body(adsResponse);
     }
-    record AdvertisementResponse(Long id, String userEmail, Long bookId, String description, boolean active, boolean borrowed) {
+    record AdvertisementResponse(Long id, String userEmail, String bookId, String description, boolean active, boolean borrowed) {
         public AdvertisementResponse(Advertisement ad){
             this(ad.getId(), ad.getUser().getEmail(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
         }
