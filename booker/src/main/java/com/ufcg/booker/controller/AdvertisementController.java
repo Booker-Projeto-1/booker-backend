@@ -51,12 +51,6 @@ public class AdvertisementController {
         return ResponseEntity.status(OK).body(adsResponse);
     }
 
-    @GetMapping("/advertisement/listAll")
-    public ResponseEntity<?> listAllAds() {
-        List<Advertisement> ads = advertisementRepository.findAll();
-        return ResponseEntity.status(OK).body(ads.stream().map(AdvertisementResponse::new).toList());
-    }
-
     @PutMapping("/advertisement/update")
     public ResponseEntity<?> updateAdvertisement(@RequestBody AdvertisementUpdate advertisementUpdate, @AuthenticationPrincipal LoggedUser loggedUser){
         User user = loggedUser.get();
@@ -65,9 +59,7 @@ public class AdvertisementController {
             return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Não existe anúncio com id " + advertisementUpdate.id + " para o usuário de id " + user.getId()));
         }
         Advertisement advertisement = optionalAdvertisement.get();
-        advertisement.setDescription(advertisementUpdate.description);
-        advertisement.setActive(advertisementUpdate.active);
-        advertisement.setBorrowed(advertisementUpdate.borrowed);
+        advertisement.setAdvetisement(advertisementUpdate.description, advertisementUpdate.active, advertisementUpdate.borrowed);
         Advertisement updatedAd = advertisementRepository.save(advertisement);
 
         return ResponseEntity.status(OK).body(new AdvertisementController.AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
