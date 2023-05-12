@@ -53,9 +53,7 @@ public class AdvertisementController {
 
     @GetMapping("/advertisement/listAll")
     public ResponseEntity<?> listAllAds() {
-
         List<Advertisement> ads = advertisementRepository.findAll();
-
         return ResponseEntity.status(OK).body(ads.stream().map(AdvertisementResponse::new).toList());
     }
 
@@ -73,7 +71,6 @@ public class AdvertisementController {
         Advertisement updatedAd = advertisementRepository.save(advertisement);
 
         return ResponseEntity.status(OK).body(new AdvertisementController.AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
-
     }
 
     @DeleteMapping("/advertisement/delete/{id}")
