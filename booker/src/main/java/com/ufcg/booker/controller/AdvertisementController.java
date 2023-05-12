@@ -50,14 +50,47 @@ public class AdvertisementController {
 
         return ResponseEntity.status(OK).body(adsResponse);
     }
+
+    @GetMapping("/advertisement/listAll")
+    public ResponseEntity<?> listAllAds() {
+
+        List<Advertisement> ads = advertisementRepository.findAll();
+
+        return ResponseEntity.status(OK).body(ads.stream().map(AdvertisementResponse::new).toList());
+    }
+
+    @PutMapping("/advertisement/update")
+    public ResponseEntity<?> updateAdvertisement(@RequestBody AdvertisementUpdate advertisementUpdate, @AuthenticationPrincipal LoggedUser loggedUser){
+        User user = loggedUser.get();
+        Optional<Advertisement> optionalAdvertisement = advertisementRepository.findByIdAndUser(advertisementUpdate.id, user);
+        if( optionalAdvertisement.isEmpty()){
+            return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Não existe anúncio com id " + advertisementUpdate.id + " para o usuário de id " + user.getId()));
+        }
+        Advertisement advertisement = optionalAdvertisement.get();
+        advertisement.setDescription(advertisementUpdate.description);
+        advertisement.setActive(advertisementUpdate.active);
+        advertisement.setBorrowed(advertisementUpdate.borrowed);
+        Advertisement updatedAd = advertisementRepository.save(advertisement);
+
+        return ResponseEntity.status(OK).body(new AdvertisementController.AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
+
+    }
+
     @DeleteMapping("/advertisement/delete/{id}")
-    public ResponseEntity<?> deleteAdvertisement(@PathVariable long id) {
-        Optional<Advertisement> optionalAdvertisement = advertisementRepository.findById(id);
-        if (!optionalAdvertisement.isPresent()) {
-            return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Não existe anúncio com id " + id));
+    public ResponseEntity<?> deleteAdvertisement(@PathVariable long id, @AuthenticationPrincipal LoggedUser loggedUser) {
+        User user = loggedUser.get();
+        Optional<Advertisement> optionalAdvertisement = advertisementRepository.findByIdAndUser(id, user);
+        if( optionalAdvertisement.isEmpty()){
+            return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Não existe anúncio com id " + id + " para o usuário de id " + user.getId()));
         }
         advertisementRepository.delete(optionalAdvertisement.get());
         return ResponseEntity.ok().build();
+    }
+
+    record AdvertisementUpdate(Long id, String description, boolean active, boolean borrowed) {
+        public AdvertisementUpdate(AdvertisementUpdate advertisementUpdate) {
+            this(advertisementUpdate.id(), advertisementUpdate.description(), advertisementUpdate.active(), advertisementUpdate.borrowed());
+        }
     }
 
     record AdvertisementResponse(Long id, String userEmail, String bookId, String description, boolean active, boolean borrowed) {
