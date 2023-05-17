@@ -1,6 +1,5 @@
 package com.ufcg.booker.security;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -20,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Configuration
 @EnableWebSecurity
@@ -27,10 +27,12 @@ public class SecurityConfiguration {
 
     private final BookerUserDetailsService userDetailsService;
     private final TokenManager tokenManager;
+    private final BookerAccessDeniedHandler bookerAccessDeniedHandler;
 
-    public SecurityConfiguration(BookerUserDetailsService userDetailsService, TokenManager tokenManager) {
+    public SecurityConfiguration(BookerUserDetailsService userDetailsService, TokenManager tokenManager, BookerAccessDeniedHandler bookerAccessDeniedHandler) {
         this.userDetailsService = userDetailsService;
         this.tokenManager = tokenManager;
+        this.bookerAccessDeniedHandler = bookerAccessDeniedHandler;
     }
 
     @Bean
@@ -57,7 +59,8 @@ public class SecurityConfiguration {
             .csrf().disable()
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint()).and()
+            .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+            .accessDeniedHandler(bookerAccessDeniedHandler).and()
             .headers().frameOptions().disable();
 
         return http.build();
@@ -68,9 +71,12 @@ public class SecurityConfiguration {
         private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
 
         @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-            logger.error("Access not verified was checked. Message: {}", authException.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to use this resource");
+        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+            String authorization = Objects.requireNonNullElse(request.getHeader("Authorization"), "[EMPTY]");
+            logger.error("Access not verified was checked. Authorization: {}, Message: {}", authorization, authException.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setHeader("Content-Type", "application/json");
+            response.getWriter().print("{\"error\": \"You are not authorized to use this resource\"}");
         }
 
     }
