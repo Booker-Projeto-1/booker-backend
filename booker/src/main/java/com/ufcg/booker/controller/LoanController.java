@@ -48,7 +48,7 @@ public class LoanController {
             return ResponseEntity.badRequest().body(new LoanError("Anuncio inexistente"));
         }
 
-        Advertisement ad = advertisementRepository.findById(request.advertisementId()).get();
+        Advertisement ad = advertisementRepository.findByIdAndUser(request.advertisementId(), user).orElseThrow(() -> new IllegalStateException("Quem tá criando o empréstimo não é o autor do Anúncio"));
         if (!ad.getUser().equals(user)){
             return ResponseEntity.status(UNAUTHORIZED).body(new LoanError("Anúncio pertence a " + ad.getUser().getEmail()));
         }
