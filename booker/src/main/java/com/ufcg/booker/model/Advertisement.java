@@ -69,7 +69,7 @@ public class Advertisement {
         this.borrowed = borrowed;
     }
 
-    public void setAdvetisement(String description, boolean active, boolean borrowed) {
+    public void updateAdvertisement(String description, boolean active, boolean borrowed) {
         this.setDescription(description);
         this.setActive(active);
         this.setBorrowed(borrowed);

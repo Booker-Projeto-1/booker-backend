@@ -59,7 +59,7 @@ public class AdvertisementController {
             return ResponseEntity.badRequest().body(new AdvertisementController.AdvertisementError("Não existe anúncio com id " + advertisementUpdate.id + " para o usuário de id " + user.getId()));
         }
         Advertisement advertisement = optionalAdvertisement.get();
-        advertisement.setAdvetisement(advertisementUpdate.description, advertisementUpdate.active, advertisementUpdate.borrowed);
+        advertisement.updateAdvertisement(advertisementUpdate.description, advertisementUpdate.active, advertisementUpdate.borrowed);
         Advertisement updatedAd = advertisementRepository.save(advertisement);
 
         return ResponseEntity.status(OK).body(new AdvertisementController.AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
