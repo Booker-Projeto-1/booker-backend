@@ -1,5 +1,6 @@
 package com.ufcg.booker.model;
 
+import com.ufcg.booker.controller.UserController.UpdateUserRequest;
 import jakarta.persistence.*;
 
 @Entity
@@ -34,5 +35,11 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void updateInformation(UpdateUserRequest updateUserRequest) {
+        this.email = updateUserRequest.email();
+        this.phoneNumber = updateUserRequest.phoneNumber();
+        this.fullName = updateUserRequest.fullName();
     }
 }
