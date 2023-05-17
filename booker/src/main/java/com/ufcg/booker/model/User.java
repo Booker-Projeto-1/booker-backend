@@ -1,6 +1,6 @@
 package com.ufcg.booker.model;
 
-import com.ufcg.booker.controller.UserController.UpdateUserRequest;
+import com.ufcg.booker.dto.UpdateUserRequest;
 import jakarta.persistence.*;
 
 @Entity
