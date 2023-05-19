@@ -38,7 +38,7 @@ public class AdvertisementController {
         Advertisement ad = request.toAdvertisement(user);
         Advertisement savedAd = advertisementRepository.save(ad);
 
-        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user.getEmail(), savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
+        return ResponseEntity.status(CREATED).body(new AdvertisementController.AdvertisementResponse(savedAd.getId(), user.getEmail(), user.getPhoneNumber(), savedAd.getBookId(), savedAd.getDescription(), savedAd.isActive(), savedAd.isBorrowed()));
     }
 
     @GetMapping("/advertisement/list")
@@ -62,7 +62,7 @@ public class AdvertisementController {
         advertisement.updateAdvertisement(advertisementUpdate.description, advertisementUpdate.active, advertisementUpdate.borrowed);
         Advertisement updatedAd = advertisementRepository.save(advertisement);
 
-        return ResponseEntity.status(OK).body(new AdvertisementController.AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
+        return ResponseEntity.status(OK).body(new AdvertisementController.AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getUser().getPhoneNumber(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
     }
 
     @DeleteMapping("/advertisement/delete/{id}")
@@ -82,9 +82,9 @@ public class AdvertisementController {
         }
     }
 
-    record AdvertisementResponse(Long id, String userEmail, String bookId, String description, boolean active, boolean borrowed) {
+    record AdvertisementResponse(Long id, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed) {
         public AdvertisementResponse(Advertisement ad){
-            this(ad.getId(), ad.getUser().getEmail(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
+            this(ad.getId(), ad.getUser().getEmail(), ad.getUser().getPhoneNumber(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
         }
     }
     record AdvertisementError(String error) {}
