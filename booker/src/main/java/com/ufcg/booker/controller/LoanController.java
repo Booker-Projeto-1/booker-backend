@@ -10,6 +10,7 @@ import com.ufcg.booker.repository.UserRepository;
 import com.ufcg.booker.security.LoggedUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,7 +66,7 @@ public class LoanController {
         return ResponseEntity.status(CREATED).body(new LoanResponse(savedLoan.getId(), user.getEmail(), borrower.getEmail(), ad.getBookId(), savedLoan.getBeginDate(), savedLoan.getEndDate()));
     }
 
-    @PostMapping("/loan/list")
+    @GetMapping("/loan/list")
     public ResponseEntity<?> listLoans(@AuthenticationPrincipal LoggedUser loggedUser){
         User user = loggedUser.get();
 
