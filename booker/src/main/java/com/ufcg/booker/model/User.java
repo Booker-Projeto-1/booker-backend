@@ -35,4 +35,12 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 }
