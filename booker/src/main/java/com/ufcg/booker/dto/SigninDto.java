@@ -12,11 +12,7 @@ public record SigninDto(
         String lastName
 ) {
 
-    private String fullName() {
-        return this.firstName + " " + this.lastName;
-    }
-
     public User toUser() {
-        return new User(this.email, this.fullName(), this.phoneNumber, new BCryptPasswordEncoder().encode(this.password)); //TODO Refactor it
+        return new User(this.email, this.firstName(), this.lastName, this.phoneNumber, new BCryptPasswordEncoder().encode(this.password)); //TODO Refactor it
     }
 }
