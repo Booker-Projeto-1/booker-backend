@@ -19,12 +19,19 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<Void> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest, @AuthenticationPrincipal LoggedUser loggedUser) {
+    public ResponseEntity<UpdateUserResponse> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest, @AuthenticationPrincipal LoggedUser loggedUser) {
         User user = loggedUser.get();
         user.updateInformation(updateUserRequest);
-        userRepository.save(user);
-        return ResponseEntity.ok().build();
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.ok(new UpdateUserResponse(savedUser));
     }
+
+    record UpdateUserResponse(Long id, String fullName, String phoneNumber) {
+        public UpdateUserResponse(User user) {
+            this(user.getId(), user.getFullName(), user.getPhoneNumber());
+        }
+    }
+
 
 }
 

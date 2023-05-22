@@ -37,6 +37,14 @@ public class User {
         return password;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     public void updateInformation(UpdateUserRequest updateUserRequest) {
         this.email = updateUserRequest.email();
         this.phoneNumber = updateUserRequest.phoneNumber();
