@@ -38,9 +38,9 @@ public class UserController {
         return ResponseEntity.status(OK).body(listAds);
     }
 
-        record UserResponse(Long id, String email, String fullName, String phoneNumber) {
+        record UserResponse(Long id, String email, String firstName, String lastName, String phoneNumber) {
             public UserResponse(User user) {
-                this(user.getId(), user.getEmail(), user.getFullName(), user.getPhoneNumber());
+                this(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber());
             }
         }
 

@@ -10,16 +10,18 @@ public class User {
     private Long id;
 
     private String email;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
     private String password;
 
     @Deprecated
     protected User(){}
 
-    public User(String email, String fullName, String phoneNumber, String password) {
+    public User(String email, String firstName, String lastName, String phoneNumber, String password) {
         this.email = email;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.password = password;
     }
@@ -37,10 +39,14 @@ public class User {
     }
 
     public String getFullName() {
-        return fullName;
+        return this.firstName + " " + this.lastName;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public String getFirstName() { return  firstName;}
+
+    public String getLastName() {return lastName;}
 }
