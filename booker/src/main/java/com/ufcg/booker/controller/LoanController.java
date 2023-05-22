@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 public class LoanController {
@@ -40,21 +41,20 @@ public class LoanController {
     public ResponseEntity<?> createLoan(@RequestBody LoanDto request, @AuthenticationPrincipal LoggedUser loggedUser){
         User user = loggedUser.get();
 
-        if(request.borrowerId().equals(user.getId())){
+        if(request.borrowerEmail().equals(user.getEmail())){
             return ResponseEntity.badRequest().body(new LoanError("Não é possível emprestar um livro a si mesmo!"));
         }
         if(!advertisementRepository.existsById(request.advertisementId())){
             return ResponseEntity.badRequest().body(new LoanError("Anuncio inexistente"));
         }
-
-        Advertisement ad = advertisementRepository.findById(request.advertisementId()).get();
+        Advertisement ad = advertisementRepository.findByIdAndUser(request.advertisementId(), user).orElseThrow(() -> new IllegalStateException("Quem tá criando o empréstimo não é o autor do Anúncio"));
         if(ad.isBorrowed()){
             return ResponseEntity.badRequest().body(new LoanError("Livro já emprestado!"));
         }
         ad.setBorrowed(true);
         advertisementRepository.save(ad);
 
-        Optional<User> possibleBorrower = userRepository.findById(request.borrowerId());
+        Optional<User> possibleBorrower = userRepository.findByEmail(request.borrowerEmail());
         if(possibleBorrower.isEmpty()){
             return ResponseEntity.badRequest().body(new LoanError("Usuário inexistente"));
         }
