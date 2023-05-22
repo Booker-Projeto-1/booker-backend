@@ -48,7 +48,6 @@ public class User {
     }
 
     public void updateInformation(UpdateUserRequest updateUserRequest) {
-        this.email = updateUserRequest.email();
         this.phoneNumber = updateUserRequest.phoneNumber();
         this.firstName = updateUserRequest.firstName();
         this.lastName = updateUserRequest.lastName();
