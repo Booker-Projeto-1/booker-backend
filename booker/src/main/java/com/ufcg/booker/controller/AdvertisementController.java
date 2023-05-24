@@ -42,11 +42,15 @@ public class AdvertisementController {
     }
 
     @GetMapping("/advertisement/list")
-    public ResponseEntity<?> listAds() {
+    public ResponseEntity<?> listAds(@RequestParam Optional<List<String>> bookIds) {
 
-        List<Advertisement> ads = advertisementRepository.findAll();
+        List<Advertisement> ads = bookIds.map(advertisementRepository::findAllByBookIdIn)
+                                         .orElseGet(advertisementRepository::findAll);
 
-        List<AdvertisementResponse> adsResponse = ads.stream().filter(ad -> !ad.isBorrowed() && ad.isActive()).map(AdvertisementResponse::new).toList();
+        List<AdvertisementResponse> adsResponse = ads.stream()
+                                                     .filter(ad -> !ad.isBorrowed() && ad.isActive())
+                                                     .map(AdvertisementResponse::new)
+                                                     .toList();
 
         return ResponseEntity.status(OK).body(adsResponse);
     }
