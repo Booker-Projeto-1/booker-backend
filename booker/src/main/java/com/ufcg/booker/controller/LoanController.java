@@ -10,6 +10,7 @@ import com.ufcg.booker.repository.UserRepository;
 import com.ufcg.booker.security.LoggedUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +19,10 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 public class LoanController {
@@ -65,6 +66,22 @@ public class LoanController {
         return ResponseEntity.status(CREATED).body(new LoanResponse(savedLoan.getId(), user.getEmail(), borrower.getEmail(), ad.getBookId(), savedLoan.getBeginDate(), savedLoan.getEndDate()));
     }
 
-    record LoanResponse(Long id, String lender, String borrower, String bookId, LocalDate begin, LocalDate end) {}
+    @GetMapping("/loan/list")
+    public ResponseEntity<?> listLoans(@AuthenticationPrincipal LoggedUser loggedUser){
+        User user = loggedUser.get();
+
+        List<Loan> loans = loanRepository.findLoansByUser(user);
+
+        List<LoanResponse> loanResponses = loans.stream().map(LoanResponse::new).toList();
+
+        return ResponseEntity.status(OK).body(loanResponses);
+    }
+
+    record LoanResponse(Long id, String lender, String borrower, String bookId, LocalDate begin, LocalDate end) {
+        public LoanResponse(Loan loan){
+            this(loan.getId(), loan.getLender().getEmail(), loan.getBorrower().getEmail(),
+                    loan.getAd().getBookId(), loan.getBeginDate(), loan.getEndDate());
+        }
+    }
     record LoanError(String error) {}
 }
