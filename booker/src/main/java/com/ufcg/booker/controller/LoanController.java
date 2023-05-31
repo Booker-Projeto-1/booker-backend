@@ -52,14 +52,14 @@ public class LoanController {
         if(ad.isBorrowed()){
             return ResponseEntity.badRequest().body(new LoanError("Livro já emprestado!"));
         }
-        ad.setBorrowed(true);
-        advertisementRepository.save(ad);
-
         Optional<User> possibleBorrower = userRepository.findByEmail(request.borrowerEmail());
         if(possibleBorrower.isEmpty()){
             return ResponseEntity.badRequest().body(new LoanError("Usuário inexistente"));
         }
+
         User borrower = possibleBorrower.get();
+        ad.setBorrowed(true);
+        advertisementRepository.save(ad);
         Loan loan = new Loan(user,borrower,ad, request.beginDate(), request.endDate());
         Loan savedLoan = loanRepository.save(loan);
 
