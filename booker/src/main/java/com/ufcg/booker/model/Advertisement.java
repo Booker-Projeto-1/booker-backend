@@ -1,5 +1,8 @@
 package com.ufcg.booker.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ufcg.booker.controller.LoanController;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ public class Advertisement {
     private boolean active;
     private boolean borrowed;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "ad")
     private List<Loan> loans;
 
@@ -97,5 +101,9 @@ public class Advertisement {
                 ", active=" + active +
                 ", borrowed=" + borrowed +
                 '}';
+    }
+
+    public List<LoanController.LoanResponse> getLoans() {
+        return this.loans.stream().map(LoanController.LoanResponse::new).toList();
     }
 }
