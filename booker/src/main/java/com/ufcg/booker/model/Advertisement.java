@@ -1,5 +1,6 @@
 package com.ufcg.booker.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Advertisement {
     private boolean active;
     private boolean borrowed;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "ad")
     private List<Loan> loans;
 
@@ -97,5 +99,9 @@ public class Advertisement {
                 ", active=" + active +
                 ", borrowed=" + borrowed +
                 '}';
+    }
+
+    public List<Loan> getLoans() {
+        return this.loans;
     }
 }

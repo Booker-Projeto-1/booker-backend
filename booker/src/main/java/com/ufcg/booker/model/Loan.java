@@ -1,5 +1,6 @@
 package com.ufcg.booker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public class Loan {
     @JoinColumn(name = "borrower_id")
     private User borrower;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "ad_id")
     private Advertisement ad;

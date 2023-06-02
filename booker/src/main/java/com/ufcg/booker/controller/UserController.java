@@ -3,6 +3,7 @@ package com.ufcg.booker.controller;
 import com.ufcg.booker.dto.UpdateUserRequest;
 import com.ufcg.booker.dto.UserResponse;
 import com.ufcg.booker.model.Advertisement;
+import com.ufcg.booker.model.Loan;
 import com.ufcg.booker.model.User;
 import com.ufcg.booker.repository.AdvertisementRepository;
 import com.ufcg.booker.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -47,7 +49,23 @@ public class UserController {
     public ResponseEntity<?> listUserAds(@AuthenticationPrincipal LoggedUser loggedUser) {
         User user = loggedUser.get();
         List<Advertisement> listAds = advertisementRepository.findByUser(user);
-        return ResponseEntity.status(OK).body(listAds);
+        return ResponseEntity.status(OK).body(listAds.stream().map(MyAdvertisementResponse::new).toList());
     }
 
+    record MyAdvertisementResponse(Long id, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed, List<LoanSummary> loans) {
+        public MyAdvertisementResponse(Advertisement ad){
+            this(ad.getId(), ad.getUser().getEmail(), ad.getUser().getPhoneNumber(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed(), convertLoans(ad.getLoans()));
+        }
+
+        private static List<LoanSummary> convertLoans(List<Loan> loans) {
+            return loans.stream()
+                    .map(LoanSummary::new)
+                    .toList();
+        }
+        record LoanSummary(String borrowerEmail, LocalDate beginDate, LocalDate endDate) {
+            public LoanSummary(Loan loan) {
+                this(loan.getBorrower().getEmail(), loan.getBeginDate(), loan.getEndDate());
+            }
+        }
+    }
 }
