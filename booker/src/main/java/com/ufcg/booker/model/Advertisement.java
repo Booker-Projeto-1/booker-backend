@@ -1,8 +1,6 @@
 package com.ufcg.booker.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.ufcg.booker.controller.LoanController;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -103,7 +101,7 @@ public class Advertisement {
                 '}';
     }
 
-    public List<LoanController.LoanResponse> getLoans() {
-        return this.loans.stream().map(LoanController.LoanResponse::new).toList();
+    public List<Loan> getLoans() {
+        return this.loans;
     }
 }

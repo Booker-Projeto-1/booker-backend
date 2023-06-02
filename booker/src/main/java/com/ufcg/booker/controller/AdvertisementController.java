@@ -9,10 +9,9 @@ import com.ufcg.booker.security.LoggedUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -63,7 +62,7 @@ public class AdvertisementController {
         advertisement.updateAdvertisement(advertisementUpdate.description, advertisementUpdate.active, advertisementUpdate.borrowed);
         Advertisement updatedAd = advertisementRepository.save(advertisement);
 
-        return ResponseEntity.status(OK).body(new AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getUser().getPhoneNumber(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed(), updatedAd.getLoans()));
+        return ResponseEntity.status(OK).body(new AdvertisementResponse(updatedAd));
     }
 
     @DeleteMapping("/advertisement/delete/{id}")
@@ -79,9 +78,20 @@ public class AdvertisementController {
 
     record AdvertisementUpdate(Long id, String description, boolean active, boolean borrowed) {}
 
-    record AdvertisementResponse(Long id, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed, List<LoanController.LoanResponse> loans) {
+    record AdvertisementResponse(Long id, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed, List<LoanSummary> loans) {
         public AdvertisementResponse(Advertisement ad){
-            this(ad.getId(), ad.getUser().getEmail(), ad.getUser().getPhoneNumber(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed(), ad.getLoans());
+            this(ad.getId(), ad.getUser().getEmail(), ad.getUser().getPhoneNumber(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed(), convertLoans(ad.getLoans()));
+        }
+
+        private static List<LoanSummary> convertLoans(List<Loan> loans) {
+            return loans.stream()
+                    .map(LoanSummary::new)
+                    .toList();
+        }
+        record LoanSummary(String borrowerEmail, LocalDate beginDate, LocalDate endDate) {
+            public LoanSummary(Loan loan) {
+                this(loan.getBorrower().getEmail(), loan.getBeginDate(), loan.getEndDate());
+            }
         }
     }
     record AdvertisementError(String error) {}
