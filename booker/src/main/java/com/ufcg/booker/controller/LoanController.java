@@ -77,7 +77,7 @@ public class LoanController {
         return ResponseEntity.status(OK).body(loanResponses);
     }
 
-    public record LoanResponse(Long id, String lender, String borrower, String bookId, LocalDate begin, LocalDate end) {
+    record LoanResponse(Long id, String lender, String borrower, String bookId, LocalDate begin, LocalDate end) {
         public LoanResponse(Loan loan){
             this(loan.getId(), loan.getLender().getEmail(), loan.getBorrower().getEmail(),
                     loan.getAd().getBookId(), loan.getBeginDate(), loan.getEndDate());
