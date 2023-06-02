@@ -55,55 +55,35 @@ public class SecurityConfiguration {
                 .build();
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests((auth) -> {
-//                auth.requestMatchers("/signin", "/login").permitAll()
-//                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-//                    .anyRequest().authenticated();
-//            })
-//            .cors().and()
-//            .csrf().disable()
-//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//            .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-//            .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-//            .accessDeniedHandler(bookerAccessDeniedHandler).and()
-//            .headers().frameOptions().disable();
-//
-//        return http.build();
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
-                    auth.requestMatchers("/signin", "/login").permitAll()
-                            .requestMatchers(PathRequest.toH2Console()).permitAll()
-                            .anyRequest().authenticated();
-                })
-                .cors() // Enable CORS
-                .configurationSource(corsConfigurationSource()) // Provide a custom CorsConfigurationSource
-                .and()
-                .csrf().disable()
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                .accessDeniedHandler(bookerAccessDeniedHandler).and()
-                .headers().frameOptions().disable();
+                auth.requestMatchers("/signin", "/login").permitAll()
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                    .anyRequest().authenticated();
+            })
+            .cors().configurationSource(corsConfigurationSource()).and()
+            .csrf().disable()
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+            .accessDeniedHandler(bookerAccessDeniedHandler).and()
+            .headers().frameOptions().disable();
 
         return http.build();
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Set the allowed origins here
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Set the allowed HTTP methods here
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Set the allowed headers here
-        configuration.setAllowCredentials(true); // Allow sending credentials (e.g., cookies) with the requests
-
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(Arrays.asList("X-Get-Header"));
+        configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 
