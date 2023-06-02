@@ -18,8 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Configuration
@@ -50,22 +55,56 @@ public class SecurityConfiguration {
                 .build();
     }
 
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.authorizeHttpRequests((auth) -> {
+//                auth.requestMatchers("/signin", "/login").permitAll()
+//                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+//                    .anyRequest().authenticated();
+//            })
+//            .cors().and()
+//            .csrf().disable()
+//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+//            .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+//            .accessDeniedHandler(bookerAccessDeniedHandler).and()
+//            .headers().frameOptions().disable();
+//
+//        return http.build();
+//    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
-                auth.requestMatchers("/signin", "/login").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                    .anyRequest().authenticated();
-            })
-            .cors().and()
-            .csrf().disable()
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-            .accessDeniedHandler(bookerAccessDeniedHandler).and()
-            .headers().frameOptions().disable();
+                    auth.requestMatchers("/signin", "/login").permitAll()
+                            .requestMatchers(PathRequest.toH2Console()).permitAll()
+                            .anyRequest().authenticated();
+                })
+                .cors() // Enable CORS
+                .configurationSource(corsConfigurationSource()) // Provide a custom CorsConfigurationSource
+                .and()
+                .csrf().disable()
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtAuthenticationFilter(tokenManager, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                .accessDeniedHandler(bookerAccessDeniedHandler).and()
+                .headers().frameOptions().disable();
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*")); // Set the allowed origins here
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Set the allowed HTTP methods here
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Set the allowed headers here
+        configuration.setAllowCredentials(true); // Allow sending credentials (e.g., cookies) with the requests
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
     private static class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
