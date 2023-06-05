@@ -8,6 +8,7 @@ import com.ufcg.booker.model.User;
 import com.ufcg.booker.repository.AdvertisementRepository;
 import com.ufcg.booker.repository.UserRepository;
 import com.ufcg.booker.security.LoggedUser;
+import com.ufcg.booker.util.CellPhoneValidator;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,8 +32,11 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest, @AuthenticationPrincipal LoggedUser loggedUser) {
+    public ResponseEntity<?> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest, @AuthenticationPrincipal LoggedUser loggedUser) {
         User user = loggedUser.get();
+        if (!CellPhoneValidator.validateCellPhone(updateUserRequest.phoneNumber())){
+            return ResponseEntity.badRequest().body(new UserController.UserError("Número de celular inválido"));
+        }
         user.updateInformation(updateUserRequest);
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(new UserResponse(savedUser));
@@ -51,6 +55,8 @@ public class UserController {
         List<Advertisement> listAds = advertisementRepository.findByUser(user);
         return ResponseEntity.status(OK).body(listAds.stream().map(MyAdvertisementResponse::new).toList());
     }
+
+    record UserError(String error) {}
 
     record MyAdvertisementResponse(Long id, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed, List<LoanSummary> loans) {
         public MyAdvertisementResponse(Advertisement ad){
