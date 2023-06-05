@@ -59,7 +59,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
                 auth.requestMatchers("/signin", "/login").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                     .anyRequest().authenticated();
             })
             .cors().configurationSource(corsConfigurationSource()).and()
