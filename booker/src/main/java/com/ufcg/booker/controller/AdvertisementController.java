@@ -62,7 +62,7 @@ public class AdvertisementController {
         advertisement.updateAdvertisement(advertisementUpdate.description, advertisementUpdate.active, advertisementUpdate.borrowed);
         Advertisement updatedAd = advertisementRepository.save(advertisement);
 
-        return ResponseEntity.status(OK).body(new AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getEmail(), updatedAd.getUser().getPhoneNumber(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
+        return ResponseEntity.status(OK).body(new AdvertisementResponse(updatedAd.getId(), updatedAd.getUser().getFullName(), updatedAd.getUser().getEmail(), updatedAd.getUser().getPhoneNumber(), updatedAd.getBookId(), updatedAd.getDescription(), updatedAd.isActive(), updatedAd.isBorrowed()));
     }
 
     @DeleteMapping("/advertisement/delete/{id}")
@@ -78,9 +78,9 @@ public class AdvertisementController {
 
     record AdvertisementUpdate(Long id, String description, boolean active, boolean borrowed) {}
 
-    record AdvertisementResponse(Long id, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed) {
+    record AdvertisementResponse(Long id, String userFullName, String userEmail, String phoneNumber, String bookId, String description, boolean active, boolean borrowed) {
         public AdvertisementResponse(Advertisement ad){
-            this(ad.getId(), ad.getUser().getEmail(), ad.getUser().getPhoneNumber(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
+            this(ad.getId(), ad.getUser().getFullName(), ad.getUser().getEmail(), ad.getUser().getPhoneNumber(), ad.getBookId(), ad.getDescription(), ad.isActive(), ad.isBorrowed());
         }
     }
     record AdvertisementError(String error) {}
